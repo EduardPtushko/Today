@@ -13,52 +13,51 @@ struct ReminderView: View {
     @Bindable var store: ReminderStore
 
     var body: some View {
-        List {
-            Text(reminder.title)
-                .font(.headline)
-            HStack {
-                Image(systemName: "calendar.circle")
+        if !showingEdit {
+            List {
+                Text(reminder.title)
                     .font(.headline)
-                    .foregroundStyle(Color(uiColor: .todayPrimaryTint))
-                Text(reminder.dueDate.dayText)
-                    .font(.subheadline)
-            }
-            HStack {
-                Image(systemName: "clock")
-                    .font(.headline)
-                    .foregroundStyle(Color(uiColor: .todayPrimaryTint))
-                Text(reminder.dueDate.formatted(date: .omitted, time: .shortened))
-                    .font(.subheadline)
-            }
-            HStack {
-                Image(systemName: "square.and.pencil")
-                    .font(.headline)
-                    .foregroundStyle(Color(uiColor: .todayPrimaryTint))
-                Text(reminder.notes)
-                    .font(.subheadline)
-            }
-
-        }
-        .listStyle(.insetGrouped)
-        .navigationTitle("Reminder")
-        .navigationBarTitleDisplayMode(.inline)
-        .toolbarBackground(.visible, for: .navigationBar)
-        .toolbar {
-            ToolbarItem(placement: .topBarTrailing) {
-                Button {
-                    self.showingEdit = true
-                } label: {
-                    Text("Edit")
+                HStack {
+                    Image(systemName: "calendar.circle")
+                        .font(.headline)
+                        .foregroundStyle(Color(uiColor: .todayPrimaryTint))
+                    Text(reminder.dueDate.dayText)
+                        .font(.subheadline)
+                }
+                HStack {
+                    Image(systemName: "clock")
+                        .font(.headline)
+                        .foregroundStyle(Color(uiColor: .todayPrimaryTint))
+                    Text(reminder.dueDate.formatted(date: .omitted, time: .shortened))
+                        .font(.subheadline)
+                }
+                HStack {
+                    Image(systemName: "square.and.pencil")
+                        .font(.headline)
+                        .foregroundStyle(Color(uiColor: .todayPrimaryTint))
+                    Text(reminder.notes)
+                        .font(.subheadline)
                 }
             }
+            .listStyle(.insetGrouped)
+            .navigationTitle("Reminder")
+            .navigationBarTitleDisplayMode(.inline)
+            .toolbarBackground(.visible, for: .navigationBar)
+            .toolbar {
+                ToolbarItem(placement: .topBarTrailing) {
+                    Button {
+                        withAnimation {
+                            showingEdit = true
+                        }
+                    } label: {
+                        Text("Edit")
+                    }
+                }
+            }
+        } else {
+            EditReminder(reminder: reminder, store: store, showEdit: $showingEdit)
+                .navigationBarBackButtonHidden()
         }
-        .fullScreenCover(isPresented: $showingEdit) {
-            EditReminder(reminder: reminder, store: store)
-        }
-        .transaction({ transaction in
-            transaction.disablesAnimations = true
-        })
-
     }
 }
 

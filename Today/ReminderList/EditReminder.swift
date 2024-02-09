@@ -10,10 +10,9 @@ import SwiftUI
 struct EditReminder: View {
     let reminder: Reminder
     @Bindable var store: ReminderStore
+    @Binding var showEdit: Bool
 
     @State private var editedReminder = Reminder.emptyReminder
-    @Environment(\.dismiss)
-    var dismiss
     @State private var isShowing = false
 
     var body: some View {
@@ -51,12 +50,13 @@ struct EditReminder: View {
 }
 
 extension EditReminder {
-
     @ToolbarContentBuilder
     private var toolbarContent: some ToolbarContent {
         ToolbarItem(placement: .cancellationAction) {
             Button {
-                dismiss()
+                withAnimation {
+                    showEdit = false
+                }
             } label: {
                 Text("Cancel")
             }
@@ -65,7 +65,9 @@ extension EditReminder {
         ToolbarItem(placement: .topBarTrailing) {
             Button {
                 store.updateReminder(editedReminder)
-                dismiss()
+                withAnimation {
+                    showEdit = false
+                }
             } label: {
                 Text("Done")
             }
@@ -74,5 +76,5 @@ extension EditReminder {
 }
 
 #Preview {
-    EditReminder(reminder: Reminder.sampleData[0], store: ReminderStore())
+    EditReminder(reminder: Reminder.sampleData[0], store: ReminderStore(), showEdit: .constant(true))
 }
