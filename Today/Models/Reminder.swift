@@ -7,12 +7,18 @@
 
 import Foundation
 
-struct Reminder: Identifiable {
+struct Reminder: Identifiable, Hashable {
     var id: String = UUID().uuidString
     var title: String
     var dueDate: Date
-    var notes: String? = nil
+    var notes: String = ""
     var isComplete = false
+}
+
+extension Reminder {
+    static var emptyReminder: Reminder {
+        Reminder(title: "", dueDate: Date(), notes: "")
+    }
 }
 
 extension [Reminder] {

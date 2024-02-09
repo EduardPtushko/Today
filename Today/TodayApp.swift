@@ -9,9 +9,12 @@ import SwiftUI
 
 @main
 struct TodayApp: App {
+    @State private var store = ReminderStore()
+
     var body: some Scene {
         WindowGroup {
-           ReminderListView()
+            ReminderListView(store: store)
+
         }
     }
 }

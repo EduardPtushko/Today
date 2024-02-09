@@ -8,41 +8,78 @@
 import SwiftUI
 
 struct ReminderListView: View {
-    var viewModel = ReminderViewModel()
-
+    @Bindable var store: ReminderStore
+    @State private var selection = ""
+    @State private var showingAddReminder = false
+    
     var body: some View {
+        @Bindable var store = store
         NavigationStack {
             List {
-                ForEach(viewModel.reminders) { reminder in
-                    NavigationLink {
-                        ReminderView(reminder: reminder)
-                    } label: {
-                        HStack {
-                            Image(systemName: reminder.isComplete ? "circle.fill" : "circle")
-                                .font(.title)
-                                .foregroundStyle(Color(uiColor: .todayListCellDoneButtonTint))
-                                .onTapGesture {
-                                    withAnimation {
-                                        viewModel.completeReminder(withId: reminder.id)
-                                    }
-                                }
+                ProgressHeaderView(progress: store.progress)
+                    .padding()
+                    .listRowBackground(LinearGradient(colors: store.listStyle.colors(), startPoint: .top, endPoint: .bottom))
 
-                            VStack(alignment: .leading) {
-                                Text(reminder.title)
-                                Text(reminder.dueDate.dayAndTimeText)
-                                    .font(.caption)
+                    ForEach(store.filteredReminders) { reminder in
+                        NavigationLink {
+                            ReminderView(reminder: reminder, store: store)
+                        } label: {
+                            HStack {
+                                Image(systemName: reminder.isComplete ? "circle.fill" : "circle")
+                                    .font(.title)
+                                    .foregroundStyle(Color(uiColor: .todayListCellDoneButtonTint))
+                                    .onTapGesture {
+                                        withAnimation {
+                                            store.completeReminder(withId: reminder.id)
+                                        }
+                                    }
+                                
+                                VStack(alignment: .leading) {
+                                    Text(reminder.title)
+                                    Text(reminder.dueDate.dayAndTimeText)
+                                        .font(.caption)
+                                }
                             }
                         }
-                        .background(Color(uiColor: .todayListCellBackground))
+                        .listRowBackground(Color(uiColor: .todayListCellBackground))
+                    }
+                    .onDelete(perform: { indexSet in
+                        let ids = indexSet.map { store.filteredReminders[$0].id}
+                        store.deleteReminder(ids: ids)
+                    })
+
+            }
+            .listStyle(.plain)
+            .background(LinearGradient(colors: store.listStyle.colors(), startPoint: .top, endPoint: .bottom))
+            .toolbarBackground(.visible, for: .navigationBar)
+            .scrollContentBackground(.hidden)
+            .sheet(isPresented: $showingAddReminder, content: {
+                NewReminder(store: store)
+            })
+            .toolbar {
+                ToolbarItem(placement: .principal) {
+                    Picker("Reminder list styles", selection: $store.listStyle) {
+                        ForEach(ReminderListStyle.allCases) { reminderStyle in
+                            Text(reminderStyle.name)
+                        }
+                    }
+                    .pickerStyle(.segmented)
+                    .frame(maxWidth: 240)
+                }
+                ToolbarItem(placement: .topBarTrailing) {
+                    Button {
+                        self.showingAddReminder = true
+                    } label: {
+                        Image(systemName: "plus")
                     }
                 }
             }
-            .listStyle(.inset)
-            .toolbar(.visible)
+            .navigationBarTitleDisplayMode(.inline)
         }
     }
 }
 
+
 #Preview {
-    ReminderListView()
+    ReminderListView(store: ReminderStore())
 }
