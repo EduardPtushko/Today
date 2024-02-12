@@ -9,10 +9,10 @@ import SwiftUI
 
 struct EditReminder: View {
     let reminder: Reminder
-    @Bindable var store: ReminderStore
+    @Bindable var store: ReminderViewModel
     @Binding var showEdit: Bool
-
     @State private var editedReminder = Reminder.emptyReminder
+
     @State private var isShowing = false
 
     var body: some View {
@@ -76,5 +76,5 @@ extension EditReminder {
 }
 
 #Preview {
-    EditReminder(reminder: Reminder.sampleData[0], store: ReminderStore(), showEdit: .constant(true))
+    EditReminder(reminder: Reminder.sampleData[0], store: ReminderViewModel(), showEdit: .constant(true))
 }

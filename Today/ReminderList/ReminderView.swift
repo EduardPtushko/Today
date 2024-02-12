@@ -10,7 +10,7 @@ import SwiftUI
 struct ReminderView: View {
     let reminder: Reminder
     @State private var showingEdit = false
-    @Bindable var store: ReminderStore
+    @Bindable var store: ReminderViewModel
 
     var body: some View {
         if !showingEdit {
@@ -63,6 +63,6 @@ struct ReminderView: View {
 
 #Preview {
     NavigationStack {
-        ReminderView(reminder: Reminder.sampleData[0], store: ReminderStore())
+        ReminderView(reminder: Reminder.sampleData[0], store: ReminderViewModel())
     }
 }

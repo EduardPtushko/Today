@@ -1,5 +1,5 @@
 //
-//  AddEditReminder.swift
+//  NewReminder.swift
 //  Today
 //
 //  Created by Eduard Ptushko on 08.02.2024.
@@ -9,7 +9,7 @@ import SwiftUI
 
 struct NewReminder: View {
     @State private var reminder = Reminder.emptyReminder
-    @Bindable var store: ReminderStore
+    @Bindable var store: ReminderViewModel
     @Environment(\.dismiss)
     var dismiss
     @State private var isShowing = false
@@ -47,7 +47,6 @@ struct NewReminder: View {
 }
 
 extension NewReminder {
-
     @ToolbarContentBuilder
     private var toolbarContent: some ToolbarContent {
         ToolbarItem(placement: .cancellationAction) {
@@ -70,5 +69,5 @@ extension NewReminder {
 }
 
 #Preview("Add Reminder") {
-    NewReminder(store: ReminderStore())
+    NewReminder(store: ReminderViewModel())
 }

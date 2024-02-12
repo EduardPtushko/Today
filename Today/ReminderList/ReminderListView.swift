@@ -8,10 +8,10 @@
 import SwiftUI
 
 struct ReminderListView: View {
-    @Bindable var store: ReminderStore
+    @Bindable var store: ReminderViewModel
     @State private var selection = ""
     @State private var showingAddReminder = false
-    
+
     var body: some View {
         @Bindable var store = store
         NavigationStack {
@@ -20,34 +20,33 @@ struct ReminderListView: View {
                     .padding()
                     .listRowBackground(LinearGradient(colors: store.listStyle.colors(), startPoint: .top, endPoint: .bottom))
 
-                    ForEach(store.filteredReminders) { reminder in
-                        NavigationLink {
-                            ReminderView(reminder: reminder, store: store)
-                        } label: {
-                            HStack {
-                                Image(systemName: reminder.isComplete ? "circle.fill" : "circle")
-                                    .font(.title)
-                                    .foregroundStyle(Color(uiColor: .todayListCellDoneButtonTint))
-                                    .onTapGesture {
-                                        withAnimation {
-                                            store.completeReminder(withId: reminder.id)
-                                        }
+                ForEach(store.filteredReminders) { reminder in
+                    NavigationLink {
+                        ReminderView(reminder: reminder, store: store)
+                    } label: {
+                        HStack {
+                            Image(systemName: reminder.isComplete ? "circle.fill" : "circle")
+                                .font(.title)
+                                .foregroundStyle(Color(uiColor: .todayListCellDoneButtonTint))
+                                .onTapGesture {
+                                    withAnimation {
+                                        store.completeReminder(withId: reminder.id)
                                     }
-                                
-                                VStack(alignment: .leading) {
-                                    Text(reminder.title)
-                                    Text(reminder.dueDate.dayAndTimeText)
-                                        .font(.caption)
                                 }
+
+                            VStack(alignment: .leading) {
+                                Text(reminder.title)
+                                Text(reminder.dueDate.dayAndTimeText)
+                                    .font(.caption)
                             }
                         }
-                        .listRowBackground(Color(uiColor: .todayListCellBackground))
                     }
-                    .onDelete(perform: { indexSet in
-                        let ids = indexSet.map { store.filteredReminders[$0].id}
-                        store.deleteReminder(ids: ids)
-                    })
-
+                    .listRowBackground(Color(uiColor: .todayListCellBackground))
+                }
+                .onDelete(perform: { indexSet in
+                    let ids = indexSet.map { store.filteredReminders[$0].id }
+                    store.deleteReminder(ids: ids)
+                })
             }
             .listStyle(.plain)
             .background(LinearGradient(colors: store.listStyle.colors(), startPoint: .top, endPoint: .bottom))
@@ -68,7 +67,7 @@ struct ReminderListView: View {
                 }
                 ToolbarItem(placement: .topBarTrailing) {
                     Button {
-                        self.showingAddReminder = true
+                        showingAddReminder = true
                     } label: {
                         Image(systemName: "plus")
                     }
@@ -79,7 +78,6 @@ struct ReminderListView: View {
     }
 }
 
-
 #Preview {
-    ReminderListView(store: ReminderStore())
+    ReminderListView(store: ReminderViewModel())
 }
