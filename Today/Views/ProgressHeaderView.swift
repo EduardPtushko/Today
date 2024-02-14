@@ -10,7 +10,7 @@ import SwiftUI
 struct ProgressHeaderView: View {
     var progress: Double
     @State private var screenSize: CGSize = .zero
-    
+
     var body: some View {
         VStack(spacing: 0) {
             Color(uiColor: .todayProgressUpperBackground)
@@ -34,7 +34,6 @@ struct ProgressHeaderView: View {
     ProgressHeaderView(progress: 0.4)
         .background(Color(uiColor: .todayGradientFutureBegin))
 }
-
 
 struct SizePreferenceKey: PreferenceKey {
     static var defaultValue: CGSize = .zero

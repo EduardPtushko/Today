@@ -74,6 +74,17 @@ struct ReminderListView: View {
                 }
             }
             .navigationBarTitleDisplayMode(.inline)
+            .alert(NSLocalizedString("Error", comment: "Error alert title"), isPresented: $store.showAlert) {
+                let actionTitle = NSLocalizedString("OK", comment: "Alert OK button title")
+                Button(actionTitle, role: .cancel) {
+                    store.error = nil
+                }
+            } message: {
+                Text(store.error ?? "")
+            }
+            .onAppear {
+                store.prepareReminderStore()
+            }
         }
     }
 }

@@ -79,7 +79,7 @@
 			children = (
 				D3D58E682B5594880027C94C /* TodayApp.swift */,
 				D3D58E762B5594950027C94C /* Models */,
-				D3F2972C2B56E6D900393220 /* ReminderList */,
+				D3F2972C2B56E6D900393220 /* Views */,
 				D3D58E6C2B55948A0027C94C /* Assets.xcassets */,
 				D3D58E6E2B55948A0027C94C /* Preview Content */,
 			);
@@ -110,7 +110,7 @@
 			path = Models;
 			sourceTree = "<group>";
 		};
-		D3F2972C2B56E6D900393220 /* ReminderList */ = {
+		D3F2972C2B56E6D900393220 /* Views */ = {
 			isa = PBXGroup;
 			children = (
 				D3833E802B76981500093F9D /* EditReminder.swift */,
@@ -119,7 +119,7 @@
 				D3D58E792B5594D10027C94C /* ReminderListView.swift */,
 				D39C9D772B75409A0040D7A3 /* ProgressHeaderView.swift */,
 			);
-			path = ReminderList;
+			path = Views;
 			sourceTree = "<group>";
 		};
 /* End PBXGroup section */
@@ -344,6 +344,7 @@
 				DEVELOPMENT_TEAM = LKA4A6WMZA;
 				ENABLE_PREVIEWS = YES;
 				GENERATE_INFOPLIST_FILE = YES;
+				INFOPLIST_KEY_NSRemindersUsageDescription = "Your reminders can help you stay on track.";
 				INFOPLIST_KEY_UIApplicationSceneManifest_Generation = YES;
 				INFOPLIST_KEY_UIApplicationSupportsIndirectInputEvents = YES;
 				INFOPLIST_KEY_UILaunchScreen_Generation = YES;
@@ -374,6 +375,7 @@
 				DEVELOPMENT_TEAM = LKA4A6WMZA;
 				ENABLE_PREVIEWS = YES;
 				GENERATE_INFOPLIST_FILE = YES;
+				INFOPLIST_KEY_NSRemindersUsageDescription = "Your reminders can help you stay on track.";
 				INFOPLIST_KEY_UIApplicationSceneManifest_Generation = YES;
 				INFOPLIST_KEY_UIApplicationSupportsIndirectInputEvents = YES;
 				INFOPLIST_KEY_UILaunchScreen_Generation = YES;

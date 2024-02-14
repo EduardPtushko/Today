@@ -10,7 +10,20 @@ import Foundation
 @Observable
 final class ReminderViewModel {
     var reminders: [Reminder] = []
+    var error: String? {
+        didSet {
+            if oldValue == nil {
+                showAlert = true
+            } else {
+                showAlert = false
+            }
+        }
+    }
+
+    var showAlert = false
     var listStyle: ReminderListStyle = .today
+
+    private var reminderStore: ReminderStore { ReminderStore.shared }
 
     var filteredReminders: [Reminder] {
         reminders.filter { listStyle.shouldInclude(date: $0.dueDate) }.sorted {
@@ -55,6 +68,21 @@ final class ReminderViewModel {
         ids.forEach { id in
             let index = reminders.indexOfReminder(withId: id)
             reminders.remove(at: index)
+        }
+    }
+
+    func prepareReminderStore() {
+        Task {
+            do {
+                try await reminderStore.requestAccess()
+                reminders = try await reminderStore.readAll()
+            } catch TodayError.accessDenied, TodayError.accessRestricted {
+                #if DEBUG
+                reminders = Reminder.sampleData
+                #endif
+            } catch {
+                self.error = error.localizedDescription
+            }
         }
     }
 }
