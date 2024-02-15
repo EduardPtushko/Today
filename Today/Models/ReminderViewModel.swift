@@ -40,10 +40,6 @@ final class ReminderViewModel {
         return progress
     }
 
-    init() {
-        reminders = Reminder.sampleData
-    }
-
     func reminder(withId id: Reminder.ID) -> Reminder {
         let index = reminders.indexOfReminder(withId: id)
         return reminders[index]
@@ -76,6 +72,7 @@ final class ReminderViewModel {
             do {
                 try await reminderStore.requestAccess()
                 reminders = try await reminderStore.readAll()
+                NotificationCenter.default.addObserver(self, selector: #selector(eventStoreChanged(_:)), name: .EKEventStoreChanged, object: nil)
             } catch TodayError.accessDenied, TodayError.accessRestricted {
                 #if DEBUG
                 reminders = Reminder.sampleData
@@ -84,5 +81,15 @@ final class ReminderViewModel {
                 self.error = error.localizedDescription
             }
         }
+    }
+
+    func reminderStoreChanged() {
+        Task {
+            reminders = try await reminderStore.readAll()
+        }
+    }
+
+    @objc func eventStoreChanged(_ notification: NSNotification) {
+        reminderStoreChanged()
     }
 }
