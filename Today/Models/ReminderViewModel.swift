@@ -76,8 +76,14 @@ final class ReminderViewModel {
 
     func deleteReminder(ids: [Reminder.ID]) {
         ids.forEach { id in
-            let index = reminders.indexOfReminder(withId: id)
-            reminders.remove(at: index)
+            do {
+                try reminderStore.remove(with: id)
+                let index = reminders.indexOfReminder(withId: id)
+                reminders.remove(at: index)
+            } catch TodayError.accessDenied {
+            } catch {
+                self.error = error.localizedDescription
+            }
         }
     }
 
