@@ -46,8 +46,14 @@ final class ReminderViewModel {
     }
 
     func updateReminder(_ reminder: Reminder) {
-        let index = reminders.indexOfReminder(withId: reminder.id)
-        reminders[index] = reminder
+        do {
+            try reminderStore.save(reminder)
+            let index = reminders.indexOfReminder(withId: reminder.id)
+            reminders[index] = reminder
+        } catch TodayError.accessDenied {
+        } catch {
+            self.error = error.localizedDescription
+        }
     }
 
     func completeReminder(withId id: Reminder.ID) {
@@ -57,7 +63,15 @@ final class ReminderViewModel {
     }
 
     func addReminder(_ reminder: Reminder) {
-        reminders.append(reminder)
+        var reminder = reminder
+        do {
+            let idFromStore = try reminderStore.save(reminder)
+            reminder.id = idFromStore
+            reminders.append(reminder)
+        } catch TodayError.accessDenied {
+        } catch {
+            self.error = error.localizedDescription
+        }
     }
 
     func deleteReminder(ids: [Reminder.ID]) {
